@@ -1,0 +1,6 @@
+import api from "./api";
+
+export const registerUser = (payload) => api.post("/auth/register", payload);
+export const loginUser = (payload) => api.post("/auth/login", payload);
+export const getMe = () => api.get("/auth/me");
+export const updateMe = (payload) => api.patch("/auth/me", payload);

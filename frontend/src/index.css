@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+body {
+  @apply bg-stone-50 text-stone-900 antialiased;
+  margin: 0;
+}
+
+a {
+  @apply text-inherit no-underline;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.container-shell {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
