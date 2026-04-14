@@ -1,14 +1,18 @@
 import { Heart, ShoppingCart } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addWishlistItem, removeWishlistItem } from "../../store/slices/wishlistSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleWishlistItem } from "../../store/slices/wishlistSlice";
 import { addToCart } from "../../store/slices/cartSlice";
 import { formatCurrency } from "../../utils/currency";
 import useI18n from "../../hooks/useI18n";
 
-const ProductCard = ({ product, isWishlisted = false }) => {
+const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t, language, currency } = useI18n();
+  const { token } = useSelector((state) => state.auth);
+  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const isWishlisted = wishlistItems.some((item) => item._id === product._id);
 
   return (
     <article className="group overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
@@ -50,11 +54,13 @@ const ProductCard = ({ product, isWishlisted = false }) => {
 
           <button
             type="button"
-            onClick={() =>
-              dispatch(
-                isWishlisted ? removeWishlistItem(product._id) : addWishlistItem(product._id)
-              )
-            }
+            onClick={() => {
+              if (!token) {
+                navigate("/login");
+                return;
+              }
+              dispatch(toggleWishlistItem(product._id));
+            }}
             className={`inline-flex items-center justify-center rounded-lg border px-3 py-2 transition ${
               isWishlisted
                 ? "border-rose-200 bg-rose-50 text-rose-700"

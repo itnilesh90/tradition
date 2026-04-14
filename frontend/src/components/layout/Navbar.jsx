@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../store/slices/categorySlice";
 import { logout } from "../../store/slices/authSlice";
+import { fetchWishlist } from "../../store/slices/wishlistSlice";
 import { setCurrency, setLanguage } from "../../store/slices/settingsSlice";
 import { useI18n } from "../../hooks/useI18n";
 
@@ -17,13 +18,19 @@ const Navbar = () => {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const { items: categories } = useSelector((state) => state.categories);
-  const { user } = useSelector((state) => state.auth);
+  const { user, token } = useSelector((state) => state.auth);
   const cartCount = useSelector((state) => state.cart.count);
   const wishlistCount = useSelector((state) => state.wishlist.items.length);
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchWishlist());
+    }
+  }, [dispatch, token]);
 
   const navCategories = useMemo(
     () => categories.slice(0, 10),
