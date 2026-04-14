@@ -1,12 +1,15 @@
 import SectionHeading from "../common/SectionHeading";
 import ProductCard from "../product/ProductCard";
+import { useI18n } from "../../hooks/useI18n";
 
 const NewArrivalsSection = ({ products = [] }) => {
+  const { t } = useI18n();
+
   return (
     <section className="space-y-5">
       <SectionHeading
-        title="New Arrivals"
-        subtitle="Fresh handcrafted drops curated for this season"
+        title={t("home.newArrivalsTitle")}
+        subtitle={t("home.newArrivalsSubtitle")}
       />
       <div className="flex gap-4 overflow-x-auto pb-2">
         {products.slice(0, 8).map((product) => (

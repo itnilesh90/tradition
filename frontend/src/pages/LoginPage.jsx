@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/slices/authSlice";
+import useI18n from "../hooks/useI18n";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading, error } = useSelector((state) => state.auth);
@@ -23,8 +25,8 @@ const LoginPage = () => {
 
   return (
     <div className="mx-auto max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h1 className="text-2xl font-semibold text-gray-900">Welcome back</h1>
-      <p className="mt-1 text-sm text-gray-500">Sign in to continue shopping.</p>
+      <h1 className="text-2xl font-semibold text-gray-900">{t("auth.loginTitle")}</h1>
+      <p className="mt-1 text-sm text-gray-500">{t("auth.loginSubtitle")}</p>
       {error && (
         <div className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
           {error}
@@ -38,7 +40,7 @@ const LoginPage = () => {
           }
           type="email"
           required
-          placeholder="Email"
+          placeholder={t("auth.email")}
           className="w-full rounded-xl border border-gray-200 px-4 py-2 outline-none ring-orange-200 focus:ring"
         />
         <input
@@ -48,7 +50,7 @@ const LoginPage = () => {
           }
           type="password"
           required
-          placeholder="Password"
+          placeholder={t("auth.password")}
           className="w-full rounded-xl border border-gray-200 px-4 py-2 outline-none ring-orange-200 focus:ring"
         />
         <button
@@ -56,13 +58,13 @@ const LoginPage = () => {
           disabled={loading}
           className="w-full rounded-xl bg-orange-500 px-4 py-2 font-medium text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {loading ? "Signing in..." : "Login"}
+          {loading ? t("auth.signingIn") : t("auth.loginButton")}
         </button>
       </form>
       <p className="mt-4 text-sm text-gray-600">
-        New here?{" "}
+        {t("auth.newHere")}{" "}
         <Link className="font-medium text-orange-500" to="/register">
-          Create account
+          {t("auth.createAccount")}
         </Link>
       </p>
     </div>

@@ -4,9 +4,12 @@ import EmptyState from "../components/common/EmptyState";
 import Loader from "../components/common/Loader";
 import { fetchMyOrders } from "../store/slices/orderSlice";
 import { formatCurrency } from "../utils/currency";
+import useI18n from "../hooks/useI18n";
 
 function OrdersPage() {
   const dispatch = useDispatch();
+  const { t, language } = useI18n();
+  const currency = useSelector((state) => state.settings.currency);
   const { myOrders, loading } = useSelector((state) => state.orders);
 
   useEffect(() => {
@@ -15,13 +18,13 @@ function OrdersPage() {
 
   return (
     <section className="mx-auto w-full max-w-5xl px-4 py-10">
-      <h1 className="font-serif text-3xl text-stone-800">My Orders</h1>
+      <h1 className="font-serif text-3xl text-stone-800">{t("orders.title")}</h1>
       {loading ? (
         <Loader />
       ) : myOrders.length === 0 ? (
         <EmptyState
-          title="No orders placed yet"
-          description="Your completed purchases will appear here."
+          title={t("orders.emptyTitle")}
+          description={t("orders.emptyDescription")}
         />
       ) : (
         <div className="mt-6 space-y-4">
@@ -39,9 +42,9 @@ function OrdersPage() {
                 </span>
               </div>
               <div className="mt-3 grid gap-2 text-sm text-stone-700 md:grid-cols-3">
-                <p>Items: {order.items.length}</p>
-                <p>Total: {formatCurrency(order.totalAmount)}</p>
-                <p>Payment: {order.payment?.provider}</p>
+                <p>{t("orders.items")}: {order.items.length}</p>
+                <p>{t("orders.total")}: {formatCurrency(order.totalAmount, { currency, language })}</p>
+                <p>{t("orders.payment")}: {order.payment?.provider}</p>
               </div>
             </article>
           ))}

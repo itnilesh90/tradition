@@ -4,9 +4,11 @@ import { useDispatch } from "react-redux";
 import { addWishlistItem, removeWishlistItem } from "../../store/slices/wishlistSlice";
 import { addToCart } from "../../store/slices/cartSlice";
 import { formatCurrency } from "../../utils/currency";
+import useI18n from "../../hooks/useI18n";
 
 const ProductCard = ({ product, isWishlisted = false }) => {
   const dispatch = useDispatch();
+  const { t, language, currency } = useI18n();
 
   return (
     <article className="group overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
@@ -28,7 +30,9 @@ const ProductCard = ({ product, isWishlisted = false }) => {
         </div>
 
         <div className="flex items-center justify-between">
-          <p className="text-xl font-bold text-rose-700">{formatCurrency(product.price)}</p>
+          <p className="text-xl font-bold text-rose-700">
+            {formatCurrency(product.price, { language, currency })}
+          </p>
           <span className="rounded-full bg-stone-100 px-2 py-1 text-xs font-medium text-stone-700">
             {product.category?.name || "Uncategorized"}
           </span>
@@ -41,7 +45,7 @@ const ProductCard = ({ product, isWishlisted = false }) => {
             className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-stone-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-stone-700"
           >
             <ShoppingCart size={16} />
-            Add to cart
+            {t("common.addToCart")}
           </button>
 
           <button

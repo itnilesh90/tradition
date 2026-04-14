@@ -1,9 +1,12 @@
 import SectionHeading from "../common/SectionHeading";
+import useI18n from "../../hooks/useI18n";
 
 const HandmadePicksSection = ({ products = [] }) => {
+  const { t } = useI18n();
+
   return (
     <section className="space-y-6">
-      <SectionHeading title="Handmade Picks" subtitle="Crafted with love by artisans." />
+      <SectionHeading title={t("handmadePicks")} subtitle={t("handmadeSubtitle")} />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {products.map((product) => (
           <article

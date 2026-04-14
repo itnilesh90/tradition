@@ -6,9 +6,13 @@ import Loader from "../components/common/Loader";
 import EmptyState from "../components/common/EmptyState";
 import { fetchCart, removeItemFromCart, updateCartQty } from "../store/slices/cartSlice";
 import { formatCurrency } from "../utils/currency";
+import useI18n from "../hooks/useI18n";
 
 const CartPage = () => {
   const dispatch = useDispatch();
+  const { t } = useI18n();
+  const currency = useSelector((state) => state.settings.currency);
+  const language = useSelector((state) => state.settings.language);
   const { items, subtotal, loading } = useSelector((state) => state.cart);
 
   useEffect(() => {
@@ -28,14 +32,14 @@ const CartPage = () => {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-slate-900">Your Cart</h1>
+      <h1 className="mb-6 text-2xl font-bold text-slate-900">{t("cart.title")}</h1>
       {loading ? (
         <Loader />
       ) : items.length === 0 ? (
         <EmptyState
-          title="Your cart is empty"
-          description="Browse our handcrafted collections and add products you love."
-          actionLabel="Start Shopping"
+          title={t("cart.emptyTitle")}
+          description={t("cart.emptyDescription")}
+          actionLabel={t("cart.startShopping")}
           actionTo="/products"
         />
       ) : (
@@ -46,26 +50,26 @@ const CartPage = () => {
             ))}
           </div>
           <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-900">Order Summary</h2>
+            <h2 className="text-lg font-semibold text-slate-900">{t("cart.orderSummary")}</h2>
             <div className="mt-4 space-y-2 text-sm text-slate-600">
               <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>{formatCurrency(subtotal)}</span>
+                <span>{t("cart.subtotal")}</span>
+                <span>{formatCurrency(subtotal, { currency, language })}</span>
               </div>
               <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>{formatCurrency(shipping)}</span>
+                <span>{t("cart.shipping")}</span>
+                <span>{formatCurrency(shipping, { currency, language })}</span>
               </div>
               <div className="mt-3 flex justify-between border-t border-slate-200 pt-3 text-base font-semibold text-slate-900">
-                <span>Total</span>
-                <span>{formatCurrency(total)}</span>
+                <span>{t("cart.total")}</span>
+                <span>{formatCurrency(total, { currency, language })}</span>
               </div>
             </div>
             <Link
               to="/checkout"
               className="mt-5 block rounded-lg bg-slate-900 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-slate-700"
             >
-              Proceed to Checkout
+              {t("cart.proceed")}
             </Link>
           </aside>
         </div>

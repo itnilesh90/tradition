@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../store/slices/authSlice";
+import useI18n from "../hooks/useI18n";
 
 function RegisterPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { loading, error } = useSelector((state) => state.auth);
   const [form, setForm] = useState({
     name: "",
@@ -22,7 +24,7 @@ function RegisterPage() {
     e.preventDefault();
     setLocalError("");
     if (form.password.length < 6) {
-      setLocalError("Password must be at least 6 characters.");
+      setLocalError(t("auth.passwordMin"));
       return;
     }
     try {
@@ -35,16 +37,16 @@ function RegisterPage() {
 
   return (
     <main className="mx-auto max-w-lg px-4 py-10">
-      <h1 className="mb-2 text-3xl font-bold text-slate-900">Create account</h1>
+      <h1 className="mb-2 text-3xl font-bold text-slate-900">{t("auth.createAccount")}</h1>
       <p className="mb-6 text-sm text-slate-600">
-        Join to wishlist, checkout, and track orders.
+        {t("auth.joinToWishlist")}
       </p>
       <form
         onSubmit={onSubmit}
         className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
       >
         <label className="block text-sm font-medium text-slate-700">
-          Full name
+          {t("auth.fullName")}
           <input
             className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             name="name"
@@ -54,7 +56,7 @@ function RegisterPage() {
           />
         </label>
         <label className="block text-sm font-medium text-slate-700">
-          Email
+          {t("auth.email")}
           <input
             type="email"
             className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -65,17 +67,17 @@ function RegisterPage() {
           />
         </label>
         <label className="block text-sm font-medium text-slate-700">
-          Phone
+          {t("auth.phone")}
           <input
             className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             name="phone"
             value={form.phone}
             onChange={onChange}
-            placeholder="Optional"
+            placeholder={t("common.optional")}
           />
         </label>
         <label className="block text-sm font-medium text-slate-700">
-          Password
+          {t("auth.password")}
           <input
             type="password"
             className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -95,13 +97,13 @@ function RegisterPage() {
           disabled={loading}
           className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-60"
         >
-          {loading ? "Creating..." : "Create account"}
+          {loading ? t("auth.creating") : t("auth.createAccount")}
         </button>
       </form>
       <p className="mt-4 text-sm text-slate-600">
-        Already have an account?{" "}
+        {t("auth.alreadyHaveAccount")}{" "}
         <Link to="/login" className="font-semibold text-emerald-700">
-          Sign in
+          {t("auth.signIn")}
         </Link>
       </p>
     </main>

@@ -8,11 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../store/slices/productSlice";
 import { addToCart } from "../store/slices/cartSlice";
 import { addWishlistItem } from "../store/slices/wishlistSlice";
+import { useI18n } from "../hooks/useI18n";
 
 function ProductDetailsPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { items: products, loading } = useSelector((state) => state.products);
+  const { t, language, currency } = useI18n();
   const [qty, setQty] = useState(1);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ function ProductDetailsPage() {
   if (!product) {
     return (
       <section className="mx-auto max-w-7xl px-4 py-12">
-        <h1 className="text-2xl font-semibold text-gray-900">Product not found</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{t("products.notFound")}</h1>
       </section>
     );
   }
@@ -55,10 +57,12 @@ function ProductDetailsPage() {
 
         <div>
           <span className="rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold uppercase text-rose-800">
-            {product.category?.name ?? "Category"}
+            {product.category?.name ?? t("products.allCategories")}
           </span>
           <h1 className="mt-3 text-3xl font-bold text-gray-900">{product.title}</h1>
-          <p className="mt-2 text-2xl font-semibold text-rose-700">{formatCurrency(product.price)}</p>
+          <p className="mt-2 text-2xl font-semibold text-rose-700">
+            {formatCurrency(product.price, { currency, language })}
+          </p>
           <p className="mt-4 text-gray-600">{product.description}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {product.tags?.map((tag) => (
@@ -67,7 +71,9 @@ function ProductDetailsPage() {
               </span>
             ))}
           </div>
-          <p className="mt-4 text-sm text-gray-500">Stock available: {product.stock}</p>
+          <p className="mt-4 text-sm text-gray-500">
+            {t("products.stockAvailable", { stock: product.stock })}
+          </p>
 
           <div className="mt-6 flex items-center gap-3">
             <input
@@ -84,7 +90,7 @@ function ProductDetailsPage() {
               type="button"
             >
               <ShoppingCart size={16} />
-              Add to cart
+              {t("products.addToCart")}
             </button>
             <button
               className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-white px-4 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50"
@@ -92,7 +98,7 @@ function ProductDetailsPage() {
               type="button"
             >
               <Heart size={16} />
-              Wishlist
+              {t("products.wishlist")}
             </button>
           </div>
         </div>

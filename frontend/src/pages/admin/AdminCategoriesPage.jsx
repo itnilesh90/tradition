@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createCategory, deleteCategory, updateCategory } from "../../services/adminService";
 import { fetchCategories } from "../../store/slices/categorySlice";
+import useI18n from "../../hooks/useI18n";
 
 const AdminCategoriesPage = () => {
   const dispatch = useDispatch();
+  const { t } = useI18n();
   const { items: categories } = useSelector((state) => state.categories);
   const [name, setName] = useState("");
   const [editingId, setEditingId] = useState("");
@@ -31,7 +33,7 @@ const AdminCategoriesPage = () => {
   };
 
   const handleDelete = async (categoryId) => {
-    const confirmed = window.confirm("Delete this category?");
+    const confirmed = window.confirm(t("admin.deleteCategoryConfirm"));
     if (!confirmed) return;
     await deleteCategory(categoryId);
     dispatch(fetchCategories());
@@ -40,18 +42,18 @@ const AdminCategoriesPage = () => {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
-        <h1 className="text-xl font-semibold text-stone-900">Category Manager</h1>
-        <p className="mt-1 text-sm text-stone-500">Pre-seeded categories are editable.</p>
+        <h1 className="text-xl font-semibold text-stone-900">{t("admin.categoriesManager")}</h1>
+        <p className="mt-1 text-sm text-stone-500">{t("admin.preseededCategoriesEditable")}</p>
         <form className="mt-4 flex gap-2" onSubmit={handleCreate}>
           <input
             className="flex-1 rounded-xl border border-stone-200 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring"
-            placeholder="Add category"
+            placeholder={t("admin.addCategory")}
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
           />
           <button type="submit" className="rounded-xl bg-stone-900 px-4 py-2 text-sm font-medium text-white">
-            Add
+            {t("common.add")}
           </button>
         </form>
       </div>
@@ -72,7 +74,7 @@ const AdminCategoriesPage = () => {
                     className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white"
                     onClick={() => handleSave(category._id)}
                   >
-                    Save
+                    {t("common.save")}
                   </button>
                 </>
               ) : (
@@ -86,7 +88,7 @@ const AdminCategoriesPage = () => {
                       setEditName(category.name);
                     }}
                   >
-                    Edit
+                    {t("common.edit")}
                   </button>
                 </>
               )}
@@ -95,7 +97,7 @@ const AdminCategoriesPage = () => {
                 className="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600"
                 onClick={() => handleDelete(category._id)}
               >
-                Delete
+                {t("common.delete")}
               </button>
             </div>
           ))}

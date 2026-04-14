@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/common/Loader';
 import EmptyState from '../../components/common/EmptyState';
 import { formatCurrency } from '../../utils/currency';
+import useI18n from '../../hooks/useI18n';
 import {
   fetchAdminOrders,
   updateOrderStatus,
@@ -13,6 +14,7 @@ const statusOptions = ['created', 'confirmed', 'packed', 'shipped', 'delivered',
 function AdminOrdersPage() {
   const dispatch = useDispatch();
   const { adminOrders, loading } = useSelector((state) => state.orders);
+  const { t, currency } = useI18n();
 
   useEffect(() => {
     dispatch(fetchAdminOrders());
@@ -25,12 +27,12 @@ function AdminOrdersPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Order Manager</h1>
-        <p className="text-sm text-slate-600">Track status and process customer orders.</p>
+        <h1 className="text-2xl font-bold text-slate-900">{t('orders.manager')}</h1>
+        <p className="text-sm text-slate-600">{t('orders.managerSubtitle')}</p>
       </div>
 
       {loading ? (
-        <Loader label="Loading orders..." />
+        <Loader label={t('common.loading')} />
       ) : adminOrders.length ? (
         <div className="space-y-4">
           {adminOrders.map((order) => (
@@ -40,14 +42,14 @@ function AdminOrdersPage() {
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="font-semibold text-slate-900">Order #{order._id.slice(-6)}</p>
+                  <p className="font-semibold text-slate-900">{t('orders.order')} #{order._id.slice(-6)}</p>
                   <p className="text-xs text-slate-500">
-                    {order.user?.name || 'Customer'} • {order.user?.email || 'No email'}
+                    {order.user?.name || t("orders.customer")} • {order.user?.email || t("orders.noEmail")}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="font-semibold text-emerald-700">
-                    {formatCurrency(order.totalAmount)}
+                    {formatCurrency(order.totalAmount, currency)}
                   </span>
                   <select
                     value={order.orderStatus}
@@ -66,7 +68,7 @@ function AdminOrdersPage() {
           ))}
         </div>
       ) : (
-        <EmptyState title="No orders yet" description="Placed orders will appear here." />
+        <EmptyState title={t('orders.none')} description={t('orders.noneDescription')} />
       )}
     </div>
   );

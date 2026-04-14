@@ -1,7 +1,11 @@
 import { Trash2 } from "lucide-react";
+import { useSelector } from "react-redux";
 import { formatCurrency } from "../../utils/currency";
+import useI18n from "../../hooks/useI18n";
 
 const CartItem = ({ item, onUpdateQty, onRemove }) => {
+  const { t } = useI18n();
+  const { language, currency } = useSelector((state) => state.settings);
   const maxQty = Math.min(item.product?.stock || 10, 10);
 
   return (
@@ -14,7 +18,9 @@ const CartItem = ({ item, onUpdateQty, onRemove }) => {
       <div>
         <h3 className="font-semibold text-stone-900">{item.product?.title}</h3>
         <p className="text-sm text-stone-600">{item.product?.category?.name}</p>
-        <p className="mt-2 text-amber-700">{formatCurrency(item.product?.price || 0)}</p>
+        <p className="mt-2 text-amber-700">
+          {formatCurrency(item.product?.price || 0, { language, currency })}
+        </p>
       </div>
       <div className="flex flex-col items-end gap-3">
         <select
@@ -24,7 +30,7 @@ const CartItem = ({ item, onUpdateQty, onRemove }) => {
         >
           {[...Array(maxQty).keys()].map((x) => (
             <option key={x + 1} value={x + 1}>
-              Qty: {x + 1}
+              {t("cart.qty")} {x + 1}
             </option>
           ))}
         </select>
@@ -33,7 +39,7 @@ const CartItem = ({ item, onUpdateQty, onRemove }) => {
           className="inline-flex items-center gap-2 rounded-md border border-stone-300 px-3 py-1 text-xs text-stone-700 hover:bg-stone-100"
         >
           <Trash2 size={14} />
-          Remove
+          {t("common.remove")}
         </button>
       </div>
     </article>

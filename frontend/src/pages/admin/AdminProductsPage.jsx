@@ -8,6 +8,8 @@ import {
   updateProduct,
 } from "../../services/adminService";
 import { fetchCategories } from "../../services/categoryService";
+import { formatCurrency } from "../../utils/currency";
+import { useI18n } from "../../hooks/useI18n";
 
 const initialState = {
   title: "",
@@ -21,6 +23,7 @@ const initialState = {
 };
 
 export default function AdminProductsPage() {
+  const { language, currency } = useI18n();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -264,7 +267,7 @@ export default function AdminProductsPage() {
                 <tr key={product._id} className="border-t border-brand-beige">
                   <td className="px-4 py-3">{product.title}</td>
                   <td className="px-4 py-3">{product.category?.name}</td>
-                  <td className="px-4 py-3">₹{product.price}</td>
+                  <td className="px-4 py-3">{formatCurrency(product.price, { language, currency })}</td>
                   <td className="px-4 py-3">{product.stock}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">

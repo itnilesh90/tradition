@@ -5,6 +5,7 @@ import {
   getAllPromoVideos,
   updatePromoVideo,
 } from "../../services/adminService";
+import { useI18n } from "../../hooks/useI18n";
 
 const initialForm = {
   title: "",
@@ -14,6 +15,7 @@ const initialForm = {
 };
 
 const AdminPromoVideosPage = () => {
+  const { t } = useI18n();
   const [promoVideos, setPromoVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(initialForm);
@@ -57,30 +59,30 @@ const AdminPromoVideosPage = () => {
   return (
     <section className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Promo Video Manager</h1>
-        <p className="text-sm text-slate-600">Manage active hero and brand story videos.</p>
+        <h1 className="text-2xl font-bold text-slate-900">{t("adminPromo.title")}</h1>
+        <p className="text-sm text-slate-600">{t("adminPromo.subtitle")}</p>
       </div>
 
       <form onSubmit={submit} className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-        <h2 className="text-lg font-semibold text-slate-900">Add Promo Video</h2>
+        <h2 className="text-lg font-semibold text-slate-900">{t("adminPromo.addTitle")}</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <input
             className="rounded-xl border border-slate-300 px-3 py-2"
-            placeholder="Title"
+            placeholder={t("common.title")}
             value={form.title}
             onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
             required
           />
           <input
             className="rounded-xl border border-slate-300 px-3 py-2"
-            placeholder="Video URL"
+            placeholder={t("adminPromo.videoUrl")}
             value={form.videoUrl}
             onChange={(event) => setForm((current) => ({ ...current, videoUrl: event.target.value }))}
             required
           />
           <input
             className="rounded-xl border border-slate-300 px-3 py-2"
-            placeholder="Fallback image URL (optional)"
+            placeholder={t("adminPromo.fallbackOptional")}
             value={form.fallbackImage}
             onChange={(event) => setForm((current) => ({ ...current, fallbackImage: event.target.value }))}
           />
@@ -89,8 +91,8 @@ const AdminPromoVideosPage = () => {
             value={form.section}
             onChange={(event) => setForm((current) => ({ ...current, section: event.target.value }))}
           >
-            <option value="hero">Hero Section</option>
-            <option value="brand-story">Brand Story Section</option>
+            <option value="hero">{t("adminPromo.heroSection")}</option>
+            <option value="brand-story">{t("adminPromo.brandStorySection")}</option>
           </select>
         </div>
         {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
@@ -99,12 +101,12 @@ const AdminPromoVideosPage = () => {
           disabled={saving}
           className="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
         >
-          {saving ? "Saving..." : "Create"}
+          {saving ? t("common.saving") : t("common.create")}
         </button>
       </form>
 
       <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-        <h2 className="text-lg font-semibold text-slate-900">All Videos</h2>
+        <h2 className="text-lg font-semibold text-slate-900">{t("adminPromo.allVideos")}</h2>
         {loading ? (
           <Loader className="py-8" />
         ) : (
@@ -114,7 +116,7 @@ const AdminPromoVideosPage = () => {
                 <div>
                   <p className="font-semibold text-slate-900">{video.title}</p>
                   <p className="text-xs text-slate-500">
-                    {video.section} • {video.isActive ? "Active" : "Inactive"}
+                    {video.section} • {video.isActive ? t("common.active") : t("common.inactive")}
                   </p>
                 </div>
                 <button
@@ -122,11 +124,11 @@ const AdminPromoVideosPage = () => {
                   onClick={() => onToggle(video)}
                   className="rounded-xl border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700"
                 >
-                  Toggle
+                  {t("common.toggle")}
                 </button>
               </div>
             ))}
-            {!promoVideos.length && <p className="text-sm text-slate-500">No promo videos yet.</p>}
+            {!promoVideos.length && <p className="text-sm text-slate-500">{t("adminPromo.noVideos")}</p>}
           </div>
         )}
       </div>

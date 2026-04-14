@@ -10,7 +10,11 @@ router.use(protect);
 
 router.post(
   "/stripe/create-intent",
-  [body("orderId").isMongoId().withMessage("Valid orderId is required"), validateRequest],
+  [
+    body("orderId").isMongoId().withMessage("Valid orderId is required"),
+    body("currency").optional().isIn(["eur", "usd"]).withMessage("Currency must be EUR or USD"),
+    validateRequest,
+  ],
   createStripeIntent
 );
 

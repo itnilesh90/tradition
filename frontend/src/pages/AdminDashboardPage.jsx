@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { Package, ShoppingBag, Users, Video } from 'lucide-react';
 import { fetchDashboardStats } from '../services/adminService';
 import Loader from '../components/common/Loader';
+import { useI18n } from "../hooks/useI18n";
+import { formatCurrency } from "../utils/currency";
+import { useSelector } from "react-redux";
 
 function StatCard({ icon, label, value }) {
   return (
@@ -22,6 +25,8 @@ function StatCard({ icon, label, value }) {
 function AdminDashboardPage() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { t, language } = useI18n();
+  const currency = useSelector((state) => state.settings.currency);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -41,16 +46,22 @@ function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold text-stone-900">Admin Dashboard</h1>
+      <h1 className="text-2xl font-semibold text-stone-900">{t("admin.dashboard")}</h1>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard icon={<ShoppingBag size={18} />} label="Products" value={stats?.products} />
-        <StatCard icon={<Package size={18} />} label="Orders" value={stats?.orders} />
-        <StatCard icon={<Users size={18} />} label="Users" value={stats?.users ?? 0} />
-        <StatCard icon={<Video size={18} />} label="Revenue" value={`₹${stats?.totalRevenue ?? 0}`} />
+        <StatCard icon={<ShoppingBag size={18} />} label={t("admin.products")} value={stats?.products} />
+        <StatCard icon={<Package size={18} />} label={t("admin.orders")} value={stats?.orders} />
+        <StatCard icon={<Users size={18} />} label={t("admin.users")} value={stats?.users ?? 0} />
+        <StatCard
+          icon={<Video size={18} />}
+          label={t("admin.revenue")}
+          value={formatCurrency(stats?.totalRevenue ?? 0, { language, currency })}
+        />
       </div>
       <div className="rounded-lg border border-stone-200 bg-white p-5">
-        <h2 className="text-lg font-semibold text-stone-900">Catalog Summary</h2>
-        <p className="mt-2 text-sm text-stone-600">Categories: {stats?.categories ?? 0}</p>
+        <h2 className="text-lg font-semibold text-stone-900">{t("admin.catalogSummary")}</h2>
+        <p className="mt-2 text-sm text-stone-600">
+          {t("admin.categories")}: {stats?.categories ?? 0}
+        </p>
       </div>
     </div>
   );

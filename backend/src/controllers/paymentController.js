@@ -7,14 +7,19 @@ export const createStripeIntent = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Stripe is not configured on server" });
   }
 
-  const { orderId } = req.body;
+  const { orderId, currency = "EUR" } = req.body;
   const order = await Order.findOne({ _id: orderId, user: req.user._id });
   if (!order) return res.status(404).json({ message: "Order not found" });
+
+  const normalizedCurrency = String(currency).toUpperCase();
+  if (!["EUR", "USD"].includes(normalizedCurrency)) {
+    return res.status(400).json({ message: "Only EUR and USD are supported" });
+  }
 
   const amount = Math.round(order.totalAmount * 100);
   const intent = await stripe.paymentIntents.create({
     amount,
-    currency: "inr",
+    currency: normalizedCurrency.toLowerCase(),
     metadata: { orderId: String(order._id), userId: String(req.user._id) },
     automatic_payment_methods: { enabled: true },
   });

@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../store/slices/categorySlice";
 import { logout } from "../../store/slices/authSlice";
+import { setCurrency, setLanguage } from "../../store/slices/settingsSlice";
+import { useI18n } from "../../hooks/useI18n";
 
 const navLinkClass = ({ isActive }) =>
   `text-sm ${isActive ? "text-stone-900 font-semibold" : "text-stone-600"} hover:text-stone-900 transition-colors`;
@@ -11,6 +13,7 @@ const navLinkClass = ({ isActive }) =>
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t, language, currency } = useI18n();
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const { items: categories } = useSelector((state) => state.categories);
@@ -40,21 +43,21 @@ const Navbar = () => {
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-6">
         <div className="flex items-center gap-6">
           <Link to="/" className="text-2xl font-bold tracking-tight text-stone-900">
-            Traditions
+            {t("brand")}
           </Link>
           <nav className="hidden items-center gap-4 lg:flex">
             <NavLink to="/" className={navLinkClass}>
-              Home
+              {t("nav.home")}
             </NavLink>
             <NavLink to="/products" className={navLinkClass}>
-              Shop
+              {t("nav.shop")}
             </NavLink>
             <NavLink to="/orders" className={navLinkClass}>
-              Orders
+              {t("nav.orders")}
             </NavLink>
             {user?.role === "admin" && (
               <NavLink to="/admin" className={navLinkClass}>
-                Admin
+                {t("nav.admin")}
               </NavLink>
             )}
           </nav>
@@ -68,7 +71,7 @@ const Navbar = () => {
           <input
             type="text"
             className="w-full border-0 bg-transparent text-sm outline-none"
-            placeholder="Search shawls, jewellery, bags..."
+            placeholder={t("nav.searchPlaceholder")}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -77,7 +80,7 @@ const Navbar = () => {
             value={selectedCategory}
             onChange={(event) => setSelectedCategory(event.target.value)}
           >
-            <option value="">All Categories</option>
+            <option value="">{t("nav.allCategories")}</option>
             {navCategories.map((category) => (
               <option key={category._id} value={category._id}>
                 {category.name}
@@ -88,11 +91,29 @@ const Navbar = () => {
             type="submit"
             className="rounded-full bg-stone-900 px-3 py-1 text-xs font-semibold text-white"
           >
-            Search
+            {t("nav.search")}
           </button>
         </form>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <select
+            aria-label="Language"
+            value={language}
+            onChange={(event) => dispatch(setLanguage(event.target.value))}
+            className="rounded-full border border-stone-200 bg-white px-2 py-1 text-xs"
+          >
+            <option value="en">EN</option>
+            <option value="fr">FR</option>
+          </select>
+          <select
+            aria-label="Currency"
+            value={currency}
+            onChange={(event) => dispatch(setCurrency(event.target.value))}
+            className="rounded-full border border-stone-200 bg-white px-2 py-1 text-xs"
+          >
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
           <Link
             to={user ? "/profile" : "/login"}
             className="rounded-full border border-stone-200 p-2 text-stone-700 hover:text-stone-900"
@@ -127,7 +148,7 @@ const Navbar = () => {
               onClick={() => dispatch(logout())}
               className="hidden rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-700 md:inline-flex"
             >
-              Logout
+              {t("nav.logout")}
             </button>
           )}
         </div>

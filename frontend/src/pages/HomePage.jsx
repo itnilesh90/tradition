@@ -10,11 +10,13 @@ import PromoBanner from '../components/common/PromoBanner';
 import BrandStoryVideoSection from '../components/home/BrandStoryVideoSection';
 import { fetchHomeCollections } from '../store/slices/productSlice';
 import { fetchPromoVideos } from '../store/slices/promoSlice';
+import { useI18n } from '../hooks/useI18n';
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const { homeCollections } = useSelector((state) => state.products);
   const { activeVideo, brandStoryVideo } = useSelector((state) => state.promo);
+  const { t } = useI18n();
 
   useEffect(() => {
     dispatch(fetchHomeCollections());
@@ -30,9 +32,9 @@ const HomePage = () => {
       <AccessoriesSection products={homeCollections.accessories} />
       <HandmadePicksSection products={homeCollections.handmade} />
       <PromoBanner
-        title="Crafted by artisans, styled for modern life"
-        description="Discover textile stories through handmade weaves, oxidized jewelry and everyday ethnic essentials."
-        ctaText="Explore Collection"
+        title={t("home.promoTitle")}
+        description={t("home.promoDescription")}
+        ctaText={t("home.exploreCollection")}
         ctaLink="/products"
         imageUrl="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80"
       />

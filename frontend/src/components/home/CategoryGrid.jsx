@@ -1,5 +1,6 @@
 import SectionHeading from "../common/SectionHeading";
 import { Link } from "react-router-dom";
+import useI18n from "../../hooks/useI18n";
 
 const keyCategories = [
   {
@@ -35,32 +36,40 @@ const keyCategories = [
 ];
 
 const CategoryGrid = () => (
-  <section className="mx-auto mt-12 w-full max-w-7xl px-4 md:px-6">
-    <SectionHeading
-      title="Shop by Category"
-      subtitle="Handpicked styles inspired by handcrafted heritage."
-    />
-    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {keyCategories.map((category) => (
-        <Link
-          key={category.title}
-          to={`/products?search=${encodeURIComponent(category.title)}`}
-          className="group relative h-52 overflow-hidden rounded-2xl bg-slate-200"
-        >
-          <img
-            src={category.image}
-            alt={category.title}
-            loading="lazy"
-            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
-          <p className="absolute bottom-3 left-3 text-lg font-semibold text-white">
-            {category.title}
-          </p>
-        </Link>
-      ))}
-    </div>
-  </section>
+  <CategoryGridContent />
 );
+
+function CategoryGridContent() {
+  const { t } = useI18n();
+
+  return (
+    <section className="mx-auto mt-12 w-full max-w-7xl px-4 md:px-6">
+      <SectionHeading
+        title={t("home.shopByCategory")}
+        subtitle={t("home.shopByCategorySubtitle")}
+      />
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {keyCategories.map((category) => (
+          <Link
+            key={category.title}
+            to={`/products?search=${encodeURIComponent(category.title)}`}
+            className="group relative h-52 overflow-hidden rounded-2xl bg-slate-200"
+          >
+            <img
+              src={category.image}
+              alt={category.title}
+              loading="lazy"
+              className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+            <p className="absolute bottom-3 left-3 text-lg font-semibold text-white">
+              {category.title}
+            </p>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export default CategoryGrid;
