@@ -7,7 +7,7 @@ import { fetchWishlist } from "./store/slices/wishlistSlice";
 
 function App() {
   const dispatch = useDispatch();
-  const { token, initialized } = useSelector((state) => state.auth);
+  const { token, initialized, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (token && !initialized) {
@@ -16,11 +16,11 @@ function App() {
   }, [dispatch, token, initialized]);
 
   useEffect(() => {
-    if (token) {
+    if (token && user) {
       dispatch(fetchCart());
       dispatch(fetchWishlist());
     }
-  }, [dispatch, token]);
+  }, [dispatch, token, user]);
 
   return <AppRouter />;
 }
