@@ -5,9 +5,11 @@ import ProductCard from "../components/product/ProductCard";
 import EmptyState from "../components/common/EmptyState";
 import Loader from "../components/common/Loader";
 import { fetchWishlist } from "../store/slices/wishlistSlice";
+import useI18n from "../hooks/useI18n";
 
 const WishlistPage = () => {
   const dispatch = useDispatch();
+  const { t } = useI18n();
   const { items, loading } = useSelector((state) => state.wishlist);
 
   useEffect(() => {
@@ -15,19 +17,19 @@ const WishlistPage = () => {
   }, [dispatch]);
 
   if (loading) {
-    return <Loader label="Loading wishlist..." />;
+    return <Loader label={t("wishlist.loading")} />;
   }
 
   return (
     <section>
       <div className="mb-6 flex items-center gap-2">
         <Heart className="h-5 w-5 text-orange-500" />
-        <h1 className="text-3xl font-semibold text-gray-900">Wishlist</h1>
+        <h1 className="text-3xl font-semibold text-gray-900">{t("wishlist.title")}</h1>
       </div>
       {!items.length ? (
         <EmptyState
-          title="Wishlist is empty"
-          description="Save products to compare styles and prices."
+          title={t("wishlist.emptyTitle")}
+          description={t("wishlist.emptyDescription")}
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

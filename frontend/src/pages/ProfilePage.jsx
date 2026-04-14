@@ -1,8 +1,13 @@
 import { User } from "lucide-react";
+import Loader from "../components/common/Loader";
 import { useAuth } from "../hooks/useAuth";
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, initialized } = useAuth();
+
+  if (!initialized) {
+    return <Loader message="Loading profile..." />;
+  }
 
   return (
     <section className="mx-auto max-w-5xl px-4 py-8">

@@ -4,7 +4,7 @@ export const useAuth = () => {
   const auth = useSelector((state) => state.auth);
   return {
     ...auth,
-    isAuthenticated: Boolean(auth.token && auth.user),
+    isAuthenticated: Boolean(auth.token),
     isAdmin: auth.user?.role === "admin",
   };
 };

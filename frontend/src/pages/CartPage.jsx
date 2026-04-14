@@ -11,13 +11,16 @@ import useI18n from "../hooks/useI18n";
 const CartPage = () => {
   const dispatch = useDispatch();
   const { t } = useI18n();
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const currency = useSelector((state) => state.settings.currency);
   const language = useSelector((state) => state.settings.language);
   const { items, subtotal, loading } = useSelector((state) => state.cart);
 
   useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
+    if (isAuthenticated) {
+      dispatch(fetchCart());
+    }
+  }, [dispatch, isAuthenticated]);
 
   const shipping = subtotal > 0 ? 79 : 0;
   const total = subtotal + shipping;

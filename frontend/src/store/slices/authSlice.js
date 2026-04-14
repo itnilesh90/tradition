@@ -13,7 +13,7 @@ const initialState = {
   token: token || null,
   user: userRaw ? JSON.parse(userRaw) : null,
   loading: false,
-  initialized: !token,
+  initialized: Boolean(userRaw) || !token,
   error: null,
 };
 
@@ -63,6 +63,7 @@ const authSlice = createSlice({
     logout(state) {
       state.token = null;
       state.user = null;
+      state.initialized = true;
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     },
@@ -108,7 +109,11 @@ const authSlice = createSlice({
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(loadProfileThunk.rejected, (state) => {
+        state.token = null;
+        state.user = null;
         state.initialized = true;
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       })
       .addCase(updateProfileThunk.fulfilled, (state, action) => {
         state.user = action.payload;
