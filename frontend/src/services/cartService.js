@@ -1,0 +1,34 @@
+import api from "./api";
+
+const getCart = async () => {
+  const { data } = await api.get("/cart");
+  return data;
+};
+
+const addToCart = async (productId, quantity = 1) => {
+  const { data } = await api.post("/cart", { productId, quantity });
+  return data;
+};
+
+const updateCartItem = async (productId, quantity) => {
+  const { data } = await api.patch(`/cart/${productId}`, { quantity });
+  return data;
+};
+
+const removeCartItem = async (productId) => {
+  const { data } = await api.delete(`/cart/${productId}`);
+  return data;
+};
+
+const clearCart = async () => {
+  const { data } = await api.delete("/cart");
+  return data;
+};
+
+export const cartService = {
+  getCart,
+  addToCart,
+  updateCartItem,
+  removeCartItem,
+  clearCart,
+};
