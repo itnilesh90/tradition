@@ -108,6 +108,8 @@ Set environment values in `backend/.env`:
 - `MONGO_URI`
 - `JWT_SECRET`
 - `CLIENT_URL`
+- `AUTH_DISABLED` (`true` to bypass JWT in development)
+- `DEV_AUTH_USER_EMAIL` (user attached when auth is disabled; default admin)
 - `CLOUDINARY_CLOUD_NAME`
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
@@ -142,6 +144,7 @@ Create `frontend/.env`:
 
 ```bash
 VITE_API_BASE_URL=http://localhost:5000/api
+VITE_AUTH_DISABLED=false
 ```
 
 Run frontend:
@@ -193,6 +196,51 @@ npm run lint
 - `GET /api/admin/dashboard`
 - Product/category/promo CRUD routes
 - Cloudinary upload routes for images/videos
+
+---
+
+## Admin Login and Admin API Usage
+
+### Option A: Normal JWT mode (default)
+
+Use:
+- `AUTH_DISABLED=false` in `backend/.env`
+- `VITE_AUTH_DISABLED=false` in `frontend/.env`
+
+1. Seed once:
+   ```bash
+   cd backend
+   npm run seed
+   ```
+2. Login from UI with admin credentials:
+   - email: `admin@tradition.com`
+   - password: `admin123`
+3. Use returned token in API calls:
+   ```bash
+   curl -H "Authorization: Bearer <JWT_TOKEN>" http://localhost:5000/api/admin/dashboard
+   ```
+
+### Option B: Disable token mechanism (for local dev)
+
+Use:
+- `AUTH_DISABLED=true` in `backend/.env`
+- `DEV_AUTH_USER_EMAIL=admin@tradition.com` in `backend/.env`
+- `VITE_AUTH_DISABLED=true` in `frontend/.env`
+
+Behavior:
+- JWT checks are bypassed in middleware (code is still present, not removed)
+- Protected APIs automatically act as `DEV_AUTH_USER_EMAIL`
+- Frontend protected routes load as authenticated once profile is fetched
+
+Example admin API call without token:
+```bash
+curl http://localhost:5000/api/admin/dashboard
+```
+
+You can switch impersonated user in disabled-auth mode by header:
+```bash
+curl -H "x-dev-user-email: customer@tradition.com" http://localhost:5000/api/auth/me
+```
 
 ---
 

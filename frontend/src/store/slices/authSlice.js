@@ -8,12 +8,13 @@ import {
 
 const token = localStorage.getItem("token");
 const userRaw = localStorage.getItem("user");
+const authDisabled = import.meta.env.VITE_AUTH_DISABLED === "true";
 
 const initialState = {
   token: token || null,
   user: userRaw ? JSON.parse(userRaw) : null,
   loading: false,
-  initialized: Boolean(userRaw) || !token,
+  initialized: authDisabled ? Boolean(userRaw) : Boolean(userRaw) || !token,
   error: null,
 };
 

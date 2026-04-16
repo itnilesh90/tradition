@@ -7,20 +7,21 @@ import { fetchWishlist } from "./store/slices/wishlistSlice";
 
 function App() {
   const dispatch = useDispatch();
+  const authDisabled = import.meta.env.VITE_AUTH_DISABLED === "true";
   const { token, initialized, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (token && !initialized) {
+    if ((authDisabled || token) && !initialized) {
       dispatch(loadProfileThunk());
     }
-  }, [dispatch, token, initialized]);
+  }, [dispatch, token, initialized, authDisabled]);
 
   useEffect(() => {
-    if (token && user) {
+    if (user && (authDisabled || token)) {
       dispatch(fetchCart());
       dispatch(fetchWishlist());
     }
-  }, [dispatch, token, user]);
+  }, [dispatch, token, user, authDisabled]);
 
   return <AppRouter />;
 }
